@@ -27,7 +27,8 @@ app = {
 
       var message = {
         username: app.username,
-        text: app.$text.val()
+        text: app.$text.val(),
+        createdAt: new Date()
       };
 
       app.$text.val('');

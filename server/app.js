@@ -1,3 +1,8 @@
+// Server code
+// var utils = require('./utils');
+// var requestHandler = require('./request-handler');
+
+
 var express = require('express');
 var db = require('./db');
 
