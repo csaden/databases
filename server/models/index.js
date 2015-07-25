@@ -10,13 +10,11 @@ module.exports = {
       var query = "SELECT * FROM messages";
 
       conn.query(query, function(err, rows, fields){
-        if(!err){
-          console.log(rows);
-          console.log('retrieving messages from the database');
-          callback(rows);
+        if(!err) {
+          callback(null, rows);
         }
         else {
-          throw err;
+          callback(err, null);
         }
       });
       conn.end();
@@ -27,32 +25,17 @@ module.exports = {
       var conn = db.connection();
       conn.connect();
 
-      console.log("Message in post pre-query: ");
-      console.dir(message);
-      message.roomname = "lobby";
-
       conn.query('INSERT INTO messages SET ?', message, function(err, rows, fields){
-        console.log('running the query');
-        console.log(rows);
         if(!err){
-          console.log("new message inserted into messages table")
+          console.log("new message inserted into messages table");
+          callback(null, rows.insertId);
         }
         else{
-          throw err;
+          callback(err, null);
         }
       });
       
-      var query = "SELECT objectId FROM messages WHERE createdAt = " + message['createdAt'] + ";";
-
-      conn.query(query, function(err, result) {
-        console.log(result);
-        if (!err) {
-          callback(result);
-        }
-      });
-
       conn.end();
-
 
     } // a function which can be used to insert a message into the database
   },
@@ -64,15 +47,15 @@ module.exports = {
       var conn = db.connection();
       conn.connect();
 
-      var query = "SELECT username FROM users;";
+      var query = "SELECT * FROM users;";
 
       conn.query(query, function(err, results){
         if(!err){
-          console.log(results);
-
-          callback(results);
+          console.log("user get request", results);
+          callback(null, results);
         } else {
-          throw err;
+          console.log(err);
+          callback(err, null);
         }
       });
       conn.end();
@@ -82,26 +65,15 @@ module.exports = {
       var conn = db.connection();
       conn.connect();
 
-      var query = "INSERT INTO users (username) VALUES ("+user['username']+");";
-
-      conn.query(query, function(err, results){
+      conn.query("INSERT INTO users SET ?", user, function(err, rows, fields) {
         if(!err){
           console.log("new user inserted into users table")
-        }
-        else{
-          throw err;
-        }
-      });
-      
-      query = "SELECT username FROM users WHERE username = " + user['username'] + ";";
-
-      conn.query(query, function(err, result) {
-        console.log(result);
-        if (!err) {
-          callback(result);
+          console.log(rows.insertId);
+          callback(null, rows.insertId);
+        } else {
+          callback(err, null);
         }
       });
-
       conn.end();
     }
   }
