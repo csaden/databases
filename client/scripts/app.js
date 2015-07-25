@@ -81,7 +81,6 @@ app = {
         data: JSON.stringify(message),
         contentType: 'application/json',
         success: function(json){
-          message.objectId = json.objectId;
           app.displayMessage(message);
         },
         complete: function(){

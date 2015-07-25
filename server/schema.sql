@@ -5,10 +5,10 @@ USE chat;
 CREATE TABLE messages (
   /* Describe your table here.*/
   objectId INT NOT NULL auto_increment,
-  username VARCHAR(50) NOT NULL,
-  message_text TEXT NOT NULL,
-  createdAt TIMESTAMP NOT NULL,
-  roomname VARCHAR(50) NOT NULL, 
+  username VARCHAR(50),
+  text TEXT,
+  createdAt VARCHAR(50),
+  roomname VARCHAR(50), 
   UNIQUE KEY(objectId)
 );
 
@@ -22,7 +22,7 @@ CREATE TABLE messages (
 
 CREATE TABLE users (
   id INT NOT NULL auto_increment,
-  username VARCHAR(50) NOT NULL,
+  username VARCHAR(50),
   UNIQUE KEY(id)
 );
 

@@ -12,6 +12,12 @@ exports.sendResponse = function(response, data, statusCode){
   response.end(JSON.stringify(data));
 };
 
+exports.send404 = function(response, err) {
+  statusCode = 404;
+  response.writeHead(statusCode, headers);
+  response.end(JSON.stringify(err));
+};
+
 exports.collectData = function(request, callback){
   var data = "";
   request.on('data', function(chunk){

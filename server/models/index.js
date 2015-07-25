@@ -3,40 +3,37 @@ var db = require('../db');
 module.exports = {
   messages: {
     get: function (callback) {
-      var conn = db.connection();
       
+      var conn = db.connection();
       conn.connect();
 
-      var query = "SELECT objectId, message_text, createdAt, username FROM messages";
+      var query = "SELECT * FROM messages";
 
-      conn.query(query, function(err, results){
+      conn.query(query, function(err, rows, fields){
         if(!err){
-          console.log(results);
-          console.log(results[0]);
-          // results = results.map(function(result) {
-             
-          // });
-          callback(results);
+          console.log(rows);
+          console.log('retrieving messages from the database');
+          callback(rows);
         }
-        else{
+        else {
           throw err;
         }
       });
       conn.end();
     }, // a function which produces all the messages
     post: function (message, callback) {
-  
+      // console.log('post messages in models', message, callback);
+
       var conn = db.connection();
-      
       conn.connect();
 
-      var query = "INSERT INTO messages" +
-        + "(username, message_text, createdAt)"
-        + "VALUES"
-        + "(" + message['username'] + "," + message['message_text'] + "," 
-        + message['createdAt'] + ");";
+      console.log("Message in post pre-query: ");
+      console.dir(message);
+      message.roomname = "lobby";
 
-      conn.query(query, function(err, results){
+      conn.query('INSERT INTO messages SET ?', message, function(err, rows, fields){
+        console.log('running the query');
+        console.log(rows);
         if(!err){
           console.log("new message inserted into messages table")
         }
@@ -45,7 +42,7 @@ module.exports = {
         }
       });
       
-      query = "SELECT objectId FROM messages WHERE createdAt = " + message['createdAt'] + ";";
+      var query = "SELECT objectId FROM messages WHERE createdAt = " + message['createdAt'] + ";";
 
       conn.query(query, function(err, result) {
         console.log(result);
@@ -63,8 +60,8 @@ module.exports = {
   users: {
     // Ditto as above.
     get: function (callback) {
-      var conn = db.connection();
 
+      var conn = db.connection();
       conn.connect();
 
       var query = "SELECT username FROM users;";
@@ -77,13 +74,12 @@ module.exports = {
         } else {
           throw err;
         }
-        conn.end();
       });
+      conn.end();
     },
     post: function (user, callback) {
-    
-      var conn = db.connection();
       
+      var conn = db.connection();
       conn.connect();
 
       var query = "INSERT INTO users (username) VALUES ("+user['username']+");";
